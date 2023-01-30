@@ -12,6 +12,6 @@ setInterval(async () => {
 
     await telemetryController();
     
-}, 20000);
+}, 6 * 60 * 60 * 1000);
 
 app.listen(3000);
