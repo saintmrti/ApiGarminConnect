@@ -1,17 +1,12 @@
 const app = require('./app');
 const { telemetryController } = require('./controller/telemetry.controller');
 
-// app.get('/', async (req, res) => {
-//     await telemetryController();
-//     res.send('Listo')
-// });
+app.listen(app.get('port'));
 
-console.log('Starting...');
-
-setInterval(async () => {
-
+const startApp = async () => {
+    console.log('Starting...');
     await telemetryController();
-    
-}, 6 * 60 * 60 * 1000);
+    process.exit();
+};
 
-app.listen(3000);
+startApp();

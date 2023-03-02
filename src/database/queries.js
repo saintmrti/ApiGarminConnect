@@ -1,9 +1,10 @@
 const _ = require('lodash');
 const moment = require('moment-timezone');
+moment.tz.setDefault('America/Mexico_City');
 
 const { getConnection } = require('./connection');
 
-getLastDate = async (req, res) => {
+const getLastDate = async (req, res) => {
     try {
         const pool = await getConnection();
         const result = await pool.request().query(
@@ -16,15 +17,15 @@ getLastDate = async (req, res) => {
     }
 };
 
-module.exports.postData = async (merge) => {
+const postData = async (merge) => {
     try {
         const pool = await getConnection();
-        const lastQueryDate = await getLastDate();
+        const lastQueryDate = moment.utc(await getLastDate()).format('YYYY-MM-DD HH:mm:ss.SSS');
 
         _.map(merge, async ({ date, heartBeat, stepsDaily, stress, bodyBattery, pulse, breath}) => {
-            const registerDate = new Date(moment.tz(date, "UTC").tz("America/Mexico_City").format())
-
+            const registerDate = moment.utc(date).format('YYYY-MM-DD HH:mm:ss.SSS');
             if (registerDate > lastQueryDate) {
+                console.log(registerDate);
                 await pool.request().query(`
                     INSERT INTO Multipak_telemetria_corporal(idPulsera, fecha, 
                                                         heartBeat, stepsDaily, stress, bodyBattery, pulse, breath)
@@ -38,7 +39,7 @@ module.exports.postData = async (merge) => {
                     );
                 `);
             };
-        })
+        });
 
         // const query = `
         //     INSERT INTO Multipak_telemetria_corporal(idPulsera, fecha, heartBeat) VALUES
@@ -54,4 +55,5 @@ module.exports.postData = async (merge) => {
     }
 };
 
+module.exports.postData= postData;
 module.exports.getLastDate = getLastDate;
