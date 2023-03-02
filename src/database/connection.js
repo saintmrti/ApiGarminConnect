@@ -1,10 +1,10 @@
 const sql = require('mssql')
 
 const dbSettings = {
-    user: 'nuvahubadmin',
-    password: 'Pastiseta2018',
-    database: 'nuvahubdemo',
-    server: 'nuvahubserver.database.windows.net',
+    user: process.env.USER,
+    password: process.env.PASS,
+    database: process.env.DB,
+    server: process.env.SERVER,
     // options: {
     //     encrypt: true,
     // },
